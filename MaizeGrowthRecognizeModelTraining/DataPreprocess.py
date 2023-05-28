@@ -72,11 +72,11 @@ if generateDataset:
     assert N_train + N_validate + N_test == N
 
     # 向训练集、验证集和测试集分配数据
-    trainTargetFile = open("./data/train/target.csv","w")
+    trainTargetFile = open("./data/train/target.csv", "w", newline="")
     trainWriter = csv.writer(trainTargetFile)
-    validateTargetFile = open("./data/validate/target.csv","w")
+    validateTargetFile = open("./data/validate/target.csv", "w", newline="")
     validateWriter = csv.writer(validateTargetFile)
-    testTargetFile = open("./data/test/target.csv","w")
+    testTargetFile = open("./data/test/target.csv", "w", newline="")
     testWriter = csv.writer(testTargetFile)
     currentClass = "0"    # 目前在分配的类别
     count_train = 0
@@ -93,16 +93,19 @@ if generateDataset:
             idx_train += 1
             count_train += 1
             info += f"idx_train={idx_train}, count_train={count_train}"
+            trainWriter.writerow([f"{idx_train}.png", currentClass])
         if count_train == N_train and count_validate != N_validate:   # 分配验证集
             shutil.copyfile(imgPath, f"./data/validate/{idx_validate}.png")
             idx_validate += 1
             count_validate += 1
             info += f"idx_validate={idx_validate}, count_validate={count_validate}"
+            validateWriter.writerow([f"{idx_validate}.png", currentClass])
         if count_train == N_train and count_validate == N_validate and count_test != N_test:    # 分配测试集
             shutil.copyfile(imgPath, f"./data/test/{idx_test}.png")
             idx_test += 1
             count_test += 1
             info += f"idx_test={idx_test}, count_test={count_test}"
+            testWriter.writerow([f"{idx_test}.png", currentClass])
         if count_train == N_train and count_validate == N_validate and count_test == N_test:    # 本类别分配完毕，快进到下个类别
             if targetContent[i][1] == currentClass:
                 continue
@@ -111,7 +114,7 @@ if generateDataset:
                 count_train = 0
                 count_validate = 0
                 count_test = 0
-                info="                                          "
+                info = "                                                                                         "
         print(info, end="\r")
 
-    print("分配完成")
+    print("\n分配完成")
